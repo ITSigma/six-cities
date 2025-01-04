@@ -11,6 +11,7 @@ import SortingOptionsForm from './components/sorting-options-form.tsx';
 import {sortOffers} from './sort-offers.ts';
 import {setOffersCityName} from '../../store/offers-process/offers-process.ts';
 import {getCityName, getOffers} from '../../store/offers-process/selectors.ts';
+import EmptyMain from './components/empty-main.tsx';
 
 
 function MainScreen(): JSX.Element {
@@ -59,10 +60,9 @@ function MainScreen(): JSX.Element {
                 <OffersList offers={sortedCityOffers} onOfferHover={setSelectedOffer} />
               </section>
             ) : (
-              <section className="cities__places places">
-                <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">No places to stay available</b>
-              </section>
+              <EmptyMain
+                cityName={currentCityName}
+              />
             )}
             <div className="cities__right-section">
 
