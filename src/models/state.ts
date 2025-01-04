@@ -3,6 +3,7 @@ import {AuthorizationStatus, CityName} from '../const.ts';
 import {ReviewData} from './api/review-data.ts';
 import {UserData} from './api/user-data.ts';
 import Offer from './api/offer.ts';
+import ExtendedOffer from './api/extended-offer.ts';
 
 export type OffersProcess = {
   cityName: CityName;
@@ -11,6 +12,8 @@ export type OffersProcess = {
 };
 
 export type OfferProcess = {
+  currentOffer: ExtendedOffer | null;
+  offersNearBy: Offer[];
 };
 
 export type FavoritesProcess = {

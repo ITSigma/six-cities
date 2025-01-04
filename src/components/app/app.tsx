@@ -10,9 +10,10 @@ import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import LoadingScreen from '../../pages/loading-screen/loading-screen.tsx';
 import HistoryRouter from '../history-route/history-route.tsx';
 import browserHistory from '../../services/browser-history.ts';
+import {getAuthorizationStatus} from '../../store/offer-process/selectors.ts';
 
 function App(): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isOffersDataLoadingStatus = useAppSelector((state) => state.isOffersDataLoadingStatus);
 
   if (authorizationStatus === AuthorizationStatus.Unknown || isOffersDataLoadingStatus) {

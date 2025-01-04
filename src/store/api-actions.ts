@@ -4,12 +4,7 @@ import {State} from '../models/state.ts';
 import {AppDispatch} from '../models/app-dispatch.ts';
 import Offer from '../models/api/offer.ts';
 import {APIRoute, AppRoute} from '../const.ts';
-import {
-  changeNearByOffer,
-  redirectToRoute,
-  setCurrentOffer,
-  setOffersNearBy
-} from './action.ts';
+import {redirectToRoute} from './action.ts';
 import {AuthData} from '../models/api/auth-data.ts';
 import {UserData} from '../models/api/user-data.ts';
 import {dropToken, saveToken} from '../services/token.ts';
@@ -21,6 +16,7 @@ import {addReview, setReviews} from './review-process/review-process.ts';
 import {setUserData} from './user-process/user-process.ts';
 import {changeOffer, setOffers, setOffersDataLoadingStatus} from './offers-process/offers-process.ts';
 import {setFavorites} from './favorites-process/favorites-process.ts';
+import {changeNearByOffer, setCurrentOffer, setOffersNearBy} from './offer-process/offer-process.ts';
 
 
 type ThunkConfig = {

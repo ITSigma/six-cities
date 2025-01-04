@@ -7,9 +7,9 @@ import { useAppSelector } from '../../hooks/use-app-selector.ts';
 import LoadingScreen from '../loading-screen/loading-screen.tsx';
 import { useAppDispatch } from '../../hooks/use-app-dispatch.ts';
 import { fetchCurrentOfferAction } from '../../store/api-actions.ts';
-import { unsetCurrentOffer } from '../../store/action.ts';
 import { useEffect } from 'react';
 import Bookmark from '../../components/bookmark/bookmark.tsx';
+import {unsetCurrentOffer} from '../../store/offer-process/offer-process.ts';
 
 function OfferScreen(): JSX.Element {
   const dispatch = useAppDispatch();

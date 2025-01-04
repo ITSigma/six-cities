@@ -1,39 +1,47 @@
 ﻿import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { OffersProcess } from '../../models/state.ts';
-import {CityName, NameSpace} from '../../const.ts';
+import {OfferProcess} from '../../models/state.ts';
+import {AppRoute, NameSpace} from '../../const.ts';
+import ExtendedOffer from '../../models/api/extended-offer.ts';
 import Offer from '../../models/api/offer.ts';
+import {fetchCurrentOfferAction} from '../api-actions.ts';
+import {redirectToRoute} from '../action.ts';
 
-const initialState: OffersProcess = {
-  cityName: CityName.Paris,
-  offers: [],
-  isOffersDataLoadingStatus: false
+const initialState: OfferProcess = {
+  currentOffer: null,
+  offersNearBy: []
 };
 
-export const offersProcess = createSlice({
+export const offerProcess = createSlice({
   name: NameSpace.Review,
   initialState,
   reducers: {
-    setOffersCityName: (state, action: PayloadAction<CityName>) => {
-      state.cityName = action.payload;
+    setCurrentOffer: (state, action: PayloadAction<ExtendedOffer>) => {
+      state.currentOffer = action.payload;
     },
-    setOffers: (state, action: PayloadAction<Offer[]>) => {
-      state.offers = action.payload;
+    unsetCurrentOffer: (state) => {
+      state.currentOffer = null;
     },
-    changeOffer: (state, action: PayloadAction<Offer>) => {
-      state.offers = state.offers
+    setOffersNearBy: (state, action: PayloadAction<Offer[]>) => {
+      state.offersNearBy = action.payload;
+    },
+    changeNearByOffer: (state, action: PayloadAction<Offer>) => {
+      state.offersNearBy = state.offersNearBy
         .map((item) =>
           item.id === action.payload.id ? action.payload : item
         );
-    },
-    setOffersDataLoadingStatus: (state, action: PayloadAction<boolean>) => {
-      state.isOffersDataLoadingStatus = action.payload;
     }
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchCurrentOfferAction.rejected, () => {
+        redirectToRoute(AppRoute.NotFound);
+      });
   }
 });
 
 export const {
-  setOffersCityName,
-  setOffers,
-  changeOffer,
-  setOffersDataLoadingStatus
-} = offersProcess.actions;
+  setCurrentOffer,
+  unsetCurrentOffer,
+  setOffersNearBy,
+  changeNearByOffer
+} = offerProcess.actions;
