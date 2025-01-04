@@ -6,10 +6,10 @@ import {useMemo, useState} from 'react';
 import {CityName, SortingOption} from '../../const.ts';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
-import {setOffersCityName} from '../../store/action.ts';
 import CitiesList from './components/cities-list.tsx';
 import SortingOptionsForm from './components/sorting-options-form.tsx';
 import {sortOffers} from './sort-offers.ts';
+import {setOffersCityName} from '../../store/offers-process/offers-process.ts';
 
 
 function MainScreen(): JSX.Element {
