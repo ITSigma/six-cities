@@ -125,9 +125,9 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
 }>(
   'user/checkAuth',
   async (_arg, {dispatch, extra: api}) => {
+    dispatch(fetchOffersAction());
     const {data} = await api.get<UserData>(APIRoute.Login);
     dispatch(setUserData(data));
-    dispatch(fetchOffersAction());
     dispatch(fetchFavoritesAction());
   },
 );
