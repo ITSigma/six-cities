@@ -7,7 +7,7 @@ import {ReviewData} from '../models/api/review-data.ts';
 
 export const redirectToRoute = createAction<AppRoute>('route/redirect');
 
-export const setCityName = createAction<CityName>('city/set');
+export const setOffersCityName = createAction<CityName>('offers/setCityName');
 
 export const setOffers = createAction<Offer[]>('offers/set');
 

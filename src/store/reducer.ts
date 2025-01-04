@@ -3,7 +3,7 @@ import {
   addReview, changeNearByOffer,
   changeOffer,
   requireAuthorization,
-  setCityName,
+  setOffersCityName,
   setCurrentOffer,
   setFavorites,
   setOffers,
@@ -32,7 +32,7 @@ const initialState = {
 
 export const reducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(setCityName, (state, action) => {
+    .addCase(setOffersCityName, (state, action) => {
       state.cityName = action.payload;
     })
     .addCase(setOffers, (state, action) => {
