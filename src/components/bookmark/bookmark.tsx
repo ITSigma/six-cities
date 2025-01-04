@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, {useCallback} from 'react';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
 import {FavoriteData} from '../../models/api/favorite-data.ts';
@@ -23,7 +23,7 @@ function Bookmark({offer, className, width, height, isCurrent}: ReviewListProps)
 
   const authStatus = useAppSelector((state) => state.authorizationStatus);
 
-  const handleBookmarkClick = (e: React.MouseEvent) => {
+  const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     if (authStatus !== AuthorizationStatus.Auth){
       return;
@@ -40,7 +40,7 @@ function Bookmark({offer, className, width, height, isCurrent}: ReviewListProps)
     } else {
       dispatch(changeFavoriteStatusAction(favoriteData));
     }
-  };
+  }, [authStatus, dispatch, isCurrent, offer.id, offer.isFavorite]);
 
   return (
     <button

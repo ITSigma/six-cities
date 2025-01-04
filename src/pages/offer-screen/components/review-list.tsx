@@ -1,7 +1,8 @@
-﻿import Review from './review.tsx';
+﻿import { MemoizedReview } from './review.tsx';
 import ReviewForm from './review-form.tsx';
 import { useAppSelector } from '../../../hooks/use-app-selector.ts';
 import { AuthorizationStatus } from '../../../const.ts';
+import { useMemo } from 'react';
 
 type ReviewListProps = {
   offerId: string;
@@ -11,10 +12,13 @@ function ReviewList({ offerId }: ReviewListProps): JSX.Element {
   const authStatus = useAppSelector((state) => state.authorizationStatus);
   const reviews = useAppSelector((state) => state.reviews);
 
-  const reviewsToDisplay = reviews
-    .slice()
-    .sort((first, second) => new Date(second.date).getTime() - new Date(first.date).getTime())
-    .slice(0, 10);
+  const reviewsToDisplay = useMemo(() =>
+    reviews
+      .slice()
+      .sort((first, second) =>
+        new Date(second.date).getTime() - new Date(first.date).getTime())
+      .slice(0, 10),
+  [reviews]);
 
   return (
     <section className="offer__reviews reviews">
@@ -23,7 +27,7 @@ function ReviewList({ offerId }: ReviewListProps): JSX.Element {
       </h2>
       <ul className="reviews__list">
         {reviewsToDisplay.map((review) => (
-          <Review review={review} key={review.id} />
+          <MemoizedReview review={review} key={review.id} />
         ))}
       </ul>
 

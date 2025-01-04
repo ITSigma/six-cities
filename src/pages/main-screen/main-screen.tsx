@@ -2,7 +2,7 @@
 import OffersList from './components/offers-list.tsx';
 import Header from '../../components/header/header.tsx';
 import Map from '../../components/map/map.tsx';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import {CityName, SortingOption} from '../../const.ts';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
@@ -20,8 +20,14 @@ function MainScreen(): JSX.Element {
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [sortingOption, setSortingOption] = useState<SortingOption>(SortingOption.Popular);
 
-  const cityOffers = offers.filter((offer) => offer.city.name === currentCityName);
-  const sortedCityOffers = sortOffers(sortingOption, cityOffers);
+  const cityOffers = useMemo(() => offers.filter((offer) =>
+    offer.city.name === currentCityName),
+  [currentCityName, offers]);
+
+  const sortedCityOffers = useMemo(() =>
+    sortOffers(sortingOption, cityOffers),
+  [cityOffers, sortingOption]
+  );
 
   const handleCityNameChange = (city: CityName) => {
     dispatch(setCityName(city));

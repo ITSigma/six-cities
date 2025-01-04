@@ -1,4 +1,5 @@
 ﻿import { ReviewData } from '../../../models/api/review-data.ts';
+import { memo } from 'react';
 
 type ReviewProps = {
   review: ReviewData;
@@ -38,4 +39,4 @@ function Review({ review }: ReviewProps): JSX.Element {
   );
 }
 
-export default Review;
+export const MemoizedReview = memo(Review);
