@@ -9,6 +9,7 @@ import {
 import Offer from '../../models/api/offer.ts';
 import {AuthorizationStatus} from '../../const.ts';
 import ExtendedOffer from '../../models/api/extended-offer.ts';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 
 type ReviewListProps = {
   offer: Offer | ExtendedOffer;
@@ -21,7 +22,7 @@ type ReviewListProps = {
 function Bookmark({offer, className, width, height, isCurrent}: ReviewListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const authStatus = useAppSelector((state) => state.authorizationStatus);
+  const authStatus = useAppSelector(getAuthorizationStatus);
 
   const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();

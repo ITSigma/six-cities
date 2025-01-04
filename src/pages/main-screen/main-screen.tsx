@@ -10,12 +10,13 @@ import CitiesList from './components/cities-list.tsx';
 import SortingOptionsForm from './components/sorting-options-form.tsx';
 import {sortOffers} from './sort-offers.ts';
 import {setOffersCityName} from '../../store/offers-process/offers-process.ts';
+import {getCityName, getOffers} from '../../store/offers-process/selectors.ts';
 
 
 function MainScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector((state) => state.offers);
-  const currentCityName = useAppSelector((state) => state.cityName);
+  const offers = useAppSelector(getOffers);
+  const currentCityName = useAppSelector(getCityName);
 
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [sortingOption, setSortingOption] = useState<SortingOption>(SortingOption.Popular);

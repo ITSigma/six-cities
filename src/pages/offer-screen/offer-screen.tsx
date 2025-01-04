@@ -10,12 +10,13 @@ import { fetchCurrentOfferAction } from '../../store/api-actions.ts';
 import { useEffect } from 'react';
 import Bookmark from '../../components/bookmark/bookmark.tsx';
 import {unsetCurrentOffer} from '../../store/offer-process/offer-process.ts';
+import {getCurrentOffer, getOffersNearBy} from '../../store/offer-process/selectors.ts';
 
 function OfferScreen(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const currentOffer = useAppSelector((state) => state.currentOffer);
-  const nearbyOffers = useAppSelector((state) => state.offersNearBy).slice(0, 3);
+  const currentOffer = useAppSelector(getCurrentOffer);
+  const nearbyOffers = useAppSelector(getOffersNearBy).slice(0, 3);
 
   const params = useParams();
   const offerId = params.id;

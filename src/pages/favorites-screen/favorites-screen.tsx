@@ -3,9 +3,10 @@ import Header from '../../components/header/header.tsx';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
+import {getOffers} from '../../store/offers-process/selectors.ts';
 
 function FavoritesScreen(): JSX.Element {
-  const offers = useAppSelector((state) => state.offers)
+  const offers = useAppSelector(getOffers)
     .filter((offer) => offer.isFavorite);
 
   return (

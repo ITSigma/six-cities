@@ -3,14 +3,16 @@ import ReviewForm from './review-form.tsx';
 import { useAppSelector } from '../../../hooks/use-app-selector.ts';
 import { AuthorizationStatus } from '../../../const.ts';
 import { useMemo } from 'react';
+import {getAuthorizationStatus} from '../../../store/user-process/selectors.ts';
+import {getReviews} from '../../../store/review-process/selectors.ts';
 
 type ReviewListProps = {
   offerId: string;
 };
 
 function ReviewList({ offerId }: ReviewListProps): JSX.Element {
-  const authStatus = useAppSelector((state) => state.authorizationStatus);
-  const reviews = useAppSelector((state) => state.reviews);
+  const authStatus = useAppSelector(getAuthorizationStatus);
+  const reviews = useAppSelector(getReviews);
 
   const reviewsToDisplay = useMemo(() =>
     reviews

@@ -3,12 +3,14 @@ import {AppRoute} from '../../const.ts';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
 import {logoutAction} from '../../store/api-actions.ts';
+import {getFavorites} from '../../store/favorites-process/selectors.ts';
+import {getUserData} from '../../store/user-process/selectors.ts';
 
 function Header(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const favorites = useAppSelector((state) => state.favorites);
-  const userData = useAppSelector((state) => state.userData);
+  const favorites = useAppSelector(getFavorites);
+  const userData = useAppSelector(getUserData);
 
   const handleSignOut = () => {
     dispatch(logoutAction());
