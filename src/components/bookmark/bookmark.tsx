@@ -1,14 +1,13 @@
-﻿import React from 'react';
+﻿import React, {useCallback} from 'react';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
 import {FavoriteData} from '../../models/api/favorite-data.ts';
-import {
-  changeCurrentFavoriteStatusAction,
-  changeFavoriteStatusAction
-} from '../../store/api-actions.ts';
+import {changeCurrentFavoriteStatusAction, changeFavoriteStatusAction} from '../../store/api-actions.ts';
 import Offer from '../../models/api/offer.ts';
-import {AuthorizationStatus} from '../../const.ts';
+import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import ExtendedOffer from '../../models/api/extended-offer.ts';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {redirectToRoute} from '../../store/action.ts';
 
 type ReviewListProps = {
   offer: Offer | ExtendedOffer;
@@ -21,11 +20,12 @@ type ReviewListProps = {
 function Bookmark({offer, className, width, height, isCurrent}: ReviewListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const authStatus = useAppSelector((state) => state.authorizationStatus);
+  const authStatus = useAppSelector(getAuthorizationStatus);
 
-  const handleBookmarkClick = (e: React.MouseEvent) => {
+  const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     if (authStatus !== AuthorizationStatus.Auth){
+      dispatch(redirectToRoute(AppRoute.Login));
       return;
     }
 
@@ -40,7 +40,7 @@ function Bookmark({offer, className, width, height, isCurrent}: ReviewListProps)
     } else {
       dispatch(changeFavoriteStatusAction(favoriteData));
     }
-  };
+  }, [authStatus, dispatch, isCurrent, offer.id, offer.isFavorite]);
 
   return (
     <button

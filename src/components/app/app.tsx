@@ -5,17 +5,20 @@ import NotFoundScreen from '../../pages/not-found-screen/not-found-screen.tsx';
 import LoginScreen from '../../pages/login-screen/login-screen.tsx';
 import OfferScreen from '../../pages/offer-screen/offer-screen.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {AppRoute} from '../../const.ts';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import LoadingScreen from '../../pages/loading-screen/loading-screen.tsx';
 import HistoryRouter from '../history-route/history-route.tsx';
 import browserHistory from '../../services/browser-history.ts';
+import {getAuthCheckedStatus, getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getOffersDataLoadingStatus} from '../../store/offers-process/selectors.ts';
 
 function App(): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const isOffersDataLoadingStatus = useAppSelector((state) => state.isOffersDataLoadingStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isAuthChecked = useAppSelector(getAuthCheckedStatus);
+  const isOffersDataLoadingStatus = useAppSelector(getOffersDataLoadingStatus);
 
-  if (authorizationStatus === AuthorizationStatus.Unknown || isOffersDataLoadingStatus) {
+  if (!isAuthChecked || isOffersDataLoadingStatus) {
     return (
       <LoadingScreen />
     );

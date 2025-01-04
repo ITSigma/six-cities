@@ -2,29 +2,36 @@
 import OffersList from './components/offers-list.tsx';
 import Header from '../../components/header/header.tsx';
 import Map from '../../components/map/map.tsx';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import {CityName, SortingOption} from '../../const.ts';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
-import {setCityName} from '../../store/action.ts';
 import CitiesList from './components/cities-list.tsx';
 import SortingOptionsForm from './components/sorting-options-form.tsx';
 import {sortOffers} from './sort-offers.ts';
+import {setOffersCityName} from '../../store/offers-process/offers-process.ts';
+import {getCityName, getOffers} from '../../store/offers-process/selectors.ts';
 
 
 function MainScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector((state) => state.offers);
-  const currentCityName = useAppSelector((state) => state.cityName);
+  const offers = useAppSelector(getOffers);
+  const currentCityName = useAppSelector(getCityName);
 
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [sortingOption, setSortingOption] = useState<SortingOption>(SortingOption.Popular);
 
-  const cityOffers = offers.filter((offer) => offer.city.name === currentCityName);
-  const sortedCityOffers = sortOffers(sortingOption, cityOffers);
+  const cityOffers = useMemo(() => offers.filter((offer) =>
+    offer.city.name === currentCityName),
+  [currentCityName, offers]);
+
+  const sortedCityOffers = useMemo(() =>
+    sortOffers(sortingOption, cityOffers),
+  [cityOffers, sortingOption]
+  );
 
   const handleCityNameChange = (city: CityName) => {
-    dispatch(setCityName(city));
+    dispatch(setOffersCityName(city));
   };
 
   const handleOptionChange = (option: SortingOption) => {

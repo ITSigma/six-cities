@@ -1,5 +1,6 @@
 ﻿import Offer from '../../models/api/offer.ts';
 import Bookmark from '../bookmark/bookmark.tsx';
+import { memo } from 'react';
 
 type OfferCardProps = {
   offer: Offer;
@@ -49,4 +50,4 @@ function OfferCard({ offer, onMouseOver, onMouseOut }: OfferCardProps): JSX.Elem
   );
 }
 
-export default OfferCard;
+export const MemoizedOfferCard = memo(OfferCard);

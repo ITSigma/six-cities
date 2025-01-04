@@ -3,10 +3,11 @@ import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import LoginForm from './components/login-form.tsx';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useEffect} from 'react';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 
 function LoginScreen() : JSX.Element {
   const navigate = useNavigate();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   useEffect(() => {
     if (authorizationStatus === AuthorizationStatus.Auth) {

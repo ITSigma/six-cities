@@ -3,20 +3,8 @@ import {AxiosInstance} from 'axios';
 import {State} from '../models/state.ts';
 import {AppDispatch} from '../models/app-dispatch.ts';
 import Offer from '../models/api/offer.ts';
-import {APIRoute, AppRoute, AuthorizationStatus} from '../const.ts';
-import {
-  addReview, changeNearByOffer,
-  changeOffer,
-  redirectToRoute,
-  requireAuthorization,
-  setCurrentOffer,
-  setFavorites,
-  setOffers,
-  setOffersDataLoadingStatus,
-  setOffersNearBy,
-  setReviews,
-  setUserData
-} from './action.ts';
+import {APIRoute, AppRoute} from '../const.ts';
+import {redirectToRoute} from './action.ts';
 import {AuthData} from '../models/api/auth-data.ts';
 import {UserData} from '../models/api/user-data.ts';
 import {dropToken, saveToken} from '../services/token.ts';
@@ -24,6 +12,11 @@ import {FavoriteData} from '../models/api/favorite-data.ts';
 import ExtendedOffer from '../models/api/extended-offer.ts';
 import {ReviewData} from '../models/api/review-data.ts';
 import {NewReviewData} from '../models/api/new-review-data.ts';
+import {addReview, setReviews} from './review-process/review-process.ts';
+import {setUserData} from './user-process/user-process.ts';
+import {changeOffer, setOffers, setOffersDataLoadingStatus} from './offers-process/offers-process.ts';
+import {setFavorites} from './favorites-process/favorites-process.ts';
+import {changeNearByOffer, setCurrentOffer, setOffersNearBy} from './offer-process/offer-process.ts';
 
 
 type ThunkConfig = {
@@ -132,15 +125,10 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
 }>(
   'user/checkAuth',
   async (_arg, {dispatch, extra: api}) => {
-    try {
-      const {data} = await api.get<UserData>(APIRoute.Login);
-      dispatch(requireAuthorization(AuthorizationStatus.Auth));
-      dispatch(setUserData(data));
-      dispatch(fetchOffersAction());
-      dispatch(fetchFavoritesAction());
-    } catch {
-      dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
-    }
+    dispatch(fetchOffersAction());
+    const {data} = await api.get<UserData>(APIRoute.Login);
+    dispatch(setUserData(data));
+    dispatch(fetchFavoritesAction());
   },
 );
 
@@ -153,7 +141,6 @@ export const loginAction = createAsyncThunk<void, AuthData, {
   async ({email, password}, {dispatch, extra: api}) => {
     const {data} = await api.post<UserData>(APIRoute.Login, {email, password});
     saveToken(data.token);
-    dispatch(requireAuthorization(AuthorizationStatus.Auth));
     dispatch(setUserData(data));
     dispatch(fetchOffersAction());
     dispatch(fetchFavoritesAction());
@@ -170,7 +157,6 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   async (_arg, {dispatch, extra: api}) => {
     await api.delete(APIRoute.Logout);
     dropToken();
-    dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
     dispatch(setUserData(null));
     dispatch(fetchOffersAction());
     dispatch(setFavorites([]));

@@ -1,7 +1,7 @@
 ﻿import Offer from '../../../models/api/offer.ts';
-import FavoritesCard from './favorites-card.tsx';
 import { Link } from 'react-router-dom';
-import {AppRoute} from '../../../const.ts';
+import { AppRoute } from '../../../const.ts';
+import { MemoizedFavoritesCard } from './favorites-card.tsx';
 
 type FavoritesListProps = {
   offers: Offer[];
@@ -28,7 +28,7 @@ function FavoritesList({ offers }: FavoritesListProps): JSX.Element {
                 .filter((offer) => offer.city.name === city)
                 .map((offer) => (
                   <Link to={AppRoute.Offer.replace(':id', offer.id)} key={offer.id} className="places__list-item">
-                    <FavoritesCard offer={offer} />
+                    <MemoizedFavoritesCard offer={offer} />
                   </Link>
                 ))}
             </div>

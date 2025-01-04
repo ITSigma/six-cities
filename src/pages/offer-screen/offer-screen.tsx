@@ -7,15 +7,16 @@ import { useAppSelector } from '../../hooks/use-app-selector.ts';
 import LoadingScreen from '../loading-screen/loading-screen.tsx';
 import { useAppDispatch } from '../../hooks/use-app-dispatch.ts';
 import { fetchCurrentOfferAction } from '../../store/api-actions.ts';
-import { unsetCurrentOffer } from '../../store/action.ts';
 import { useEffect } from 'react';
 import Bookmark from '../../components/bookmark/bookmark.tsx';
+import {unsetCurrentOffer} from '../../store/offer-process/offer-process.ts';
+import {getCurrentOffer, getOffersNearBy} from '../../store/offer-process/selectors.ts';
 
 function OfferScreen(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const currentOffer = useAppSelector((state) => state.currentOffer);
-  const nearbyOffers = useAppSelector((state) => state.offersNearBy).slice(0, 3);
+  const currentOffer = useAppSelector(getCurrentOffer);
+  const nearbyOffers = useAppSelector(getOffersNearBy).slice(0, 3);
 
   const params = useParams();
   const offerId = params.id;
@@ -88,7 +89,7 @@ function OfferScreen(): JSX.Element {
 
               <div className="offer__price">
                 <b className="offer__price-value">€{currentOffer.price}</b>
-                <span className="offer__price-text">/night</span>
+                <span className="offer__price-text">&nbsp;night</span>
               </div>
 
               <div className="offer__inside">
