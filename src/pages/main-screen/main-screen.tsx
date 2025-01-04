@@ -63,8 +63,11 @@ function MainScreen(): JSX.Element {
                 {cityOffers.length > 0 ? (
                   <Map
                     mainLocation={cityOffers[0].city.location}
-                    offers={cityOffers}
-                    selectedOffer={selectedOffer}
+                    points={cityOffers.map((offer) => ({
+                      id: offer.id,
+                      location: offer.location,
+                    }))}
+                    selectedOfferId={selectedOffer !== null ? selectedOffer.id : null}
                   />
                 ) : (
                   <img src="img/map.jpg" alt="No map available"/>

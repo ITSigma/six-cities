@@ -1,19 +1,24 @@
-﻿import React, {ChangeEvent, useState} from 'react';
-import {ratingsData} from '../rating-data.ts';
-import {NewReviewData, ReviewData} from '../../../models/api/review-data.ts';
-import reviewsMock from '../../../mocks/reviews-mock.ts';
+﻿import React, { ChangeEvent, useState } from 'react';
+import { ratingsData } from '../rating-data.ts';
+import { NewReviewData } from '../../../models/api/new-review-data.ts';
+import { useAppDispatch } from '../../../hooks/use-app-dispatch.ts';
+import { publishReview } from '../../../store/api-actions.ts';
 
-type OfferScreenProps = {
-  onSubmit: (newReview: ReviewData) => void;
+type ReviewFormProps = {
+  offerId: string;
 };
 
-function ReviewForm({ onSubmit } : OfferScreenProps): JSX.Element {
+function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const initialFormState = {
     rating: 0,
     comment: '',
+    offerId: offerId
   };
 
   const [formState, setFormState] = useState<NewReviewData>(initialFormState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -24,20 +29,27 @@ function ReviewForm({ onSubmit } : OfferScreenProps): JSX.Element {
     }));
   };
 
-  const handleFormSubmit = (event: React.FormEvent) => {
+  const handleFormSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
 
-    const review : ReviewData = {
-      id : crypto.randomUUID(),
-      date: new Date(),
-      user: reviewsMock[0].user,
-      comment: formState.comment,
-      rating: formState.rating
+    setIsSubmitting(true);
+
+    const submitReview = async () => {
+      const review = {
+        rating: +formState.rating,
+        comment: formState.comment,
+        offerId: formState.offerId
+      };
+
+      try {
+        await dispatch(publishReview(review));
+        setFormState(initialFormState);
+      } finally {
+        setIsSubmitting(false);
+      }
     };
 
-    onSubmit(review);
-
-    setFormState(initialFormState);
+    submitReview();
   };
 
   return (
@@ -48,7 +60,7 @@ function ReviewForm({ onSubmit } : OfferScreenProps): JSX.Element {
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
-      <div className="reviews__rating-form form__rating ">
+      <div className="reviews__rating-form form__rating">
         {ratingsData.map((ratingData) => (
           <div key={ratingData.rating}>
             <input
@@ -66,7 +78,7 @@ function ReviewForm({ onSubmit } : OfferScreenProps): JSX.Element {
               title={ratingData.ratingTranscript}
             >
               <svg className="form__star-image" width="37" height="33">
-                <use xlinkHref="#icon-star"/>
+                <use xlinkHref="#icon-star" />
               </svg>
             </label>
           </div>
@@ -89,7 +101,7 @@ function ReviewForm({ onSubmit } : OfferScreenProps): JSX.Element {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!formState.rating || formState.comment.length < 50 || formState.comment.length > 300}
+          disabled={isSubmitting || !formState.rating || formState.comment.length < 50 || formState.comment.length > 300}
         >
           Submit
         </button>

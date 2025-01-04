@@ -1,18 +1,20 @@
 ﻿import Review from './review.tsx';
 import ReviewForm from './review-form.tsx';
-import {useState} from 'react';
-import {ReviewData} from '../../../models/api/review-data.ts';
-import reviewsMock from '../../../mocks/reviews-mock.ts';
+import { useAppSelector } from '../../../hooks/use-app-selector.ts';
+import { AuthorizationStatus } from '../../../const.ts';
 
+type ReviewListProps = {
+  offerId: string;
+};
 
-function ReviewList(): JSX.Element {
-  const [reviews, setReviews] = useState<ReviewData[]>(reviewsMock);
+function ReviewList({ offerId }: ReviewListProps): JSX.Element {
+  const authStatus = useAppSelector((state) => state.authorizationStatus);
+  const reviews = useAppSelector((state) => state.reviews);
 
-  const handleFormSubmit = (newReview: ReviewData) => {
-    setReviews((prev) => (
-      [...prev, newReview]
-    ));
-  };
+  const reviewsToDisplay = reviews
+    .slice()
+    .sort((first, second) => new Date(second.date).getTime() - new Date(first.date).getTime())
+    .slice(0, 10);
 
   return (
     <section className="offer__reviews reviews">
@@ -20,12 +22,12 @@ function ReviewList(): JSX.Element {
         Reviews · <span className="reviews__amount">{reviews.length}</span>
       </h2>
       <ul className="reviews__list">
-        {reviews.map((review) => (
+        {reviewsToDisplay.map((review) => (
           <Review review={review} key={review.id} />
         ))}
       </ul>
 
-      <ReviewForm onSubmit={handleFormSubmit} />
+      {authStatus === AuthorizationStatus.Auth && <ReviewForm offerId={offerId} />}
     </section>
   );
 }

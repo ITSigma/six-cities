@@ -2,11 +2,8 @@
 
 export type ReviewData = {
   id: string;
-  date: Date;
+  date: string;
   user: ExternalUserData;
   comment: string;
   rating: number;
 }
-
-export type NewReviewData = Pick<ReviewData, 'comment' | 'rating'>;
-
