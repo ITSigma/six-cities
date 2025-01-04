@@ -22,6 +22,8 @@ export const addReview = createAction<ReviewData>('reviews/add');
 
 export const setOffersNearBy = createAction<Offer[]>('offers/setNearBy');
 
+export const changeNearByOffer = createAction<Offer>('offers/changeNearBy');
+
 export const changeOffer = createAction<Offer>('offers/change');
 
 export const setOffersDataLoadingStatus = createAction<boolean>('offers/setDataLoadingStatus');

@@ -30,7 +30,12 @@ function ReviewForm({ offerId } : ReviewFormProps): JSX.Element {
 
   const handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    dispatch(publishReview(formState));
+    const review = {
+      rating: +formState.rating,
+      comment: formState.comment,
+      offerId: formState.offerId
+    };
+    dispatch(publishReview(review));
     setFormState(initialFormState);
   };
 

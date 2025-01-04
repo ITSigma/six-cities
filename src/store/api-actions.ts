@@ -5,7 +5,7 @@ import {AppDispatch} from '../models/app-dispatch.ts';
 import Offer from '../models/api/offer.ts';
 import {APIRoute, AppRoute, AuthorizationStatus} from '../const.ts';
 import {
-  addReview,
+  addReview, changeNearByOffer,
   changeOffer,
   redirectToRoute,
   requireAuthorization,
@@ -64,7 +64,10 @@ export const publishReview = createAsyncThunk<void, NewReviewData, ThunkConfig> 
   'reviews/publish',
   async (newReview, {dispatch, extra: api}) => {
     const route = APIRoute.Comments.replace('{offerId}', newReview.offerId);
-    const {data} = await api.post<ReviewData>(route, newReview);
+    const {data} = await api.post<ReviewData>(route, {
+      rating: newReview.rating,
+      comment: newReview.comment
+    });
     dispatch(addReview(data));
   },
 );
@@ -103,6 +106,22 @@ export const changeFavoriteStatusAction = createAsyncThunk<void, FavoriteData, T
 
     dispatch(changeOffer(data));
     dispatch(fetchFavoritesAction());
+    dispatch(changeNearByOffer(data));
+  }
+);
+
+export const changeCurrentFavoriteStatusAction = createAsyncThunk<void, FavoriteData, ThunkConfig> (
+  'favorites/changeCurrentStatus',
+  async ({offerId, status}, {dispatch, extra: api}) => {
+    const route = APIRoute.AddToFavorites
+      .replace('{offerId}', offerId)
+      .replace('{status}', `${status}`);
+    const {data} = await api.post<Offer>(route);
+
+    dispatch(changeOffer(data));
+    dispatch(fetchFavoritesAction());
+    dispatch(changeNearByOffer(data));
+    dispatch(fetchCurrentOfferAction({offerId}));
   }
 );
 

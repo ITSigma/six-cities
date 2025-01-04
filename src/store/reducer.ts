@@ -1,6 +1,6 @@
 ﻿import {createReducer} from '@reduxjs/toolkit';
 import {
-  addReview,
+  addReview, changeNearByOffer,
   changeOffer,
   requireAuthorization,
   setCityName,
@@ -67,6 +67,12 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(changeOffer, (state, action) => {
       state.offers = state.offers
+        .map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        );
+    })
+    .addCase(changeNearByOffer, (state, action) => {
+      state.offersNearBy = state.offersNearBy
         .map((item) =>
           item.id === action.payload.id ? action.payload : item
         );
