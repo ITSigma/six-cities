@@ -2,11 +2,15 @@
   Root = '/',
   Login = '/login',
   Favorites = '/favorites',
-  Offer = '/offer/:id'
+  Offer = '/offer/:id',
+  NotFound = '/404'
 }
 
 export enum APIRoute {
   Offers = '/offers',
+  Offer = '/offers/{offerId}',
+  Comments = '/comments/{offerId}',
+  OffersNearBy = 'offers/{offerId}/nearby',
   Favorites = '/favorite',
   AddToFavorites = '/favorite/{offerId}/{status}',
   Login = '/login',

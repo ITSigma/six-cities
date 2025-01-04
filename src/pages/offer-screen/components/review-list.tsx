@@ -1,18 +1,13 @@
 ﻿import Review from './review.tsx';
 import ReviewForm from './review-form.tsx';
-import {useState} from 'react';
-import {ReviewData} from '../../../models/api/review-data.ts';
-import reviewsMock from '../../../mocks/reviews-mock.ts';
+import {useAppSelector} from '../../../hooks/use-app-selector.ts';
 
+type ReviewListProps = {
+  offerId: string;
+};
 
-function ReviewList(): JSX.Element {
-  const [reviews, setReviews] = useState<ReviewData[]>(reviewsMock);
-
-  const handleFormSubmit = (newReview: ReviewData) => {
-    setReviews((prev) => (
-      [...prev, newReview]
-    ));
-  };
+function ReviewList({offerId}: ReviewListProps): JSX.Element {
+  const reviews = useAppSelector((state) => state.reviews);
 
   return (
     <section className="offer__reviews reviews">
@@ -25,7 +20,7 @@ function ReviewList(): JSX.Element {
         ))}
       </ul>
 
-      <ReviewForm onSubmit={handleFormSubmit} />
+      <ReviewForm offerId={offerId} />
     </section>
   );
 }

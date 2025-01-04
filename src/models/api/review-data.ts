@@ -7,6 +7,3 @@ export type ReviewData = {
   comment: string;
   rating: number;
 }
-
-export type NewReviewData = Pick<ReviewData, 'comment' | 'rating'>;
-

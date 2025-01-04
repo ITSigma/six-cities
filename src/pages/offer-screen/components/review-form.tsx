@@ -1,16 +1,20 @@
 ﻿import React, {ChangeEvent, useState} from 'react';
 import {ratingsData} from '../rating-data.ts';
-import {NewReviewData, ReviewData} from '../../../models/api/review-data.ts';
-import reviewsMock from '../../../mocks/reviews-mock.ts';
+import {NewReviewData} from '../../../models/api/new-review-data.ts';
+import {useAppDispatch} from '../../../hooks/use-app-dispatch.ts';
+import {publishReview} from '../../../store/api-actions.ts';
 
-type OfferScreenProps = {
-  onSubmit: (newReview: ReviewData) => void;
+type ReviewFormProps = {
+  offerId: string;
 };
 
-function ReviewForm({ onSubmit } : OfferScreenProps): JSX.Element {
+function ReviewForm({ offerId } : ReviewFormProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const initialFormState = {
     rating: 0,
     comment: '',
+    offerId: offerId
   };
 
   const [formState, setFormState] = useState<NewReviewData>(initialFormState);
@@ -26,17 +30,7 @@ function ReviewForm({ onSubmit } : OfferScreenProps): JSX.Element {
 
   const handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
-    const review : ReviewData = {
-      id : crypto.randomUUID(),
-      date: new Date(),
-      user: reviewsMock[0].user,
-      comment: formState.comment,
-      rating: formState.rating
-    };
-
-    onSubmit(review);
-
+    dispatch(publishReview(formState));
     setFormState(initialFormState);
   };
 

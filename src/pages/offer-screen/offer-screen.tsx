@@ -4,12 +4,41 @@ import Map from '../../components/map/map.tsx';
 import NearbyOffersList from './components/nearby-offers-list.tsx';
 import {useParams} from 'react-router-dom';
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
+import LoadingScreen from '../loading-screen/loading-screen.tsx';
+import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
+import {fetchCurrentOfferAction} from '../../store/api-actions.ts';
+import {unsetCurrentOffer} from '../../store/action.ts';
+import {useEffect} from 'react';
 
 function OfferScreen(): JSX.Element {
-  const nearbyOffers = useAppSelector((state) => state.offers);
+  const dispatch = useAppDispatch();
+
+  const currentOffer = useAppSelector((state) => state.currentOffer);
+  const nearbyOffers = useAppSelector((state) => state.offersNearBy);
 
   const params = useParams();
-  const currentOffer = nearbyOffers.find((offer) => offer.id === params.id) || nearbyOffers[0];
+  const offerId = params.id;
+
+  useEffect(() => {
+    if (offerId) {
+      dispatch(fetchCurrentOfferAction({offerId}));
+    }
+
+    return () => {
+      dispatch(unsetCurrentOffer());
+    };
+  }, [offerId, dispatch]);
+
+  if (!currentOffer) {
+    return (
+      <LoadingScreen />
+    );
+  }
+
+  const point = {
+    id: currentOffer.id,
+    location: currentOffer.location
+  };
 
   return (
     <div className="page">
@@ -118,12 +147,21 @@ function OfferScreen(): JSX.Element {
                 </div>
               </div>
 
-              <ReviewList />
+              <ReviewList offerId={currentOffer.id}/>
             </div>
           </div>
 
           <section className="offer__map map">
-            <Map mainLocation={currentOffer.location} offers={nearbyOffers} selectedOffer={currentOffer} />
+            <Map
+              mainLocation={currentOffer.location}
+              points={nearbyOffers
+                .map((offer) => ({
+                  location: offer.location,
+                  id: offer.id,
+                }))
+                .concat(point)}
+              selectedOfferId={currentOffer.id}
+            />
           </section>
         </section>
 
@@ -131,7 +169,7 @@ function OfferScreen(): JSX.Element {
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <NearbyOffersList
-              nearbyOffers={nearbyOffers.filter((offer) => offer.id !== currentOffer.id)}
+              nearbyOffers={nearbyOffers}
             />
           </section>
         </div>

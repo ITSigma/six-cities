@@ -1,14 +1,15 @@
 ﻿import {useRef, useEffect} from 'react';
 import {Icon, Marker, layerGroup} from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../const';
 import Location from '../../models/location.ts';
-import Offer from '../../models/api/offer.ts';
+import Point from '../../models/point.ts';
 
 type MapProps = {
   mainLocation: Location;
-  offers: Offer[];
-  selectedOffer: Offer | null;
+  points: Point[];
+  selectedOfferId: string | null;
 };
 
 const defaultCustomIcon = new Icon({
@@ -23,22 +24,22 @@ const currentCustomIcon = new Icon({
   iconAnchor: [20, 40]
 });
 
-function Map({mainLocation, offers, selectedOffer}: MapProps): JSX.Element {
+function Map({mainLocation, points, selectedOfferId}: MapProps): JSX.Element {
   const mapRef = useRef(null);
   const map = useMap(mapRef, mainLocation);
 
   useEffect(() => {
     if (map) {
       const markerLayer = layerGroup().addTo(map);
-      offers.forEach((offer) => {
+      points.forEach((offerLocation) => {
         const marker = new Marker({
-          lat: offer.location.latitude,
-          lng: offer.location.longitude
+          lat: offerLocation.location.latitude,
+          lng: offerLocation.location.longitude
         });
 
         marker
           .setIcon(
-            selectedOffer !== null && offer.id === selectedOffer.id
+            selectedOfferId !== null && offerLocation.id === selectedOfferId
               ? currentCustomIcon
               : defaultCustomIcon
           )
@@ -49,7 +50,7 @@ function Map({mainLocation, offers, selectedOffer}: MapProps): JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, offers, selectedOffer]);
+  }, [map, points, selectedOfferId]);
 
   return <div style={{height: '100%'}} ref={mapRef}></div>;
 }
