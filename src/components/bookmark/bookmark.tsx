@@ -2,14 +2,12 @@
 import {useAppSelector} from '../../hooks/use-app-selector.ts';
 import {useAppDispatch} from '../../hooks/use-app-dispatch.ts';
 import {FavoriteData} from '../../models/api/favorite-data.ts';
-import {
-  changeCurrentFavoriteStatusAction,
-  changeFavoriteStatusAction
-} from '../../store/api-actions.ts';
+import {changeCurrentFavoriteStatusAction, changeFavoriteStatusAction} from '../../store/api-actions.ts';
 import Offer from '../../models/api/offer.ts';
-import {AuthorizationStatus} from '../../const.ts';
+import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import ExtendedOffer from '../../models/api/extended-offer.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {redirectToRoute} from '../../store/action.ts';
 
 type ReviewListProps = {
   offer: Offer | ExtendedOffer;
@@ -27,6 +25,7 @@ function Bookmark({offer, className, width, height, isCurrent}: ReviewListProps)
   const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     if (authStatus !== AuthorizationStatus.Auth){
+      dispatch(redirectToRoute(AppRoute.Login));
       return;
     }
 
